@@ -38,6 +38,8 @@ Press `Ctrl+C` to stop the server.
 - Ran `test_setup.py` to verify everything was installed correctly
 - All 4 checks passed (Python version, packages, basic functionality, Gutenberg access)
 
+![test_setup.py output](screenshots/test_setup.png)
+
 ### Part 2: Text Preprocessor Methods (starter_preprocess.py)
 
 I implemented three methods in the `TextPreprocessor` class:
@@ -82,6 +84,12 @@ I implemented two API endpoints:
 - Shows a loading spinner while the text is being fetched and processed
 - Displays the results (statistics, summary, text preview) when done
 - Shows an error message if something goes wrong
+
+#### Home Page
+![Home page](screenshots/home_page.png)
+
+#### Analysis Results (Alice in Wonderland)
+![Results page](screenshots/results.png)
 
 ## Example URLs to Test
 
