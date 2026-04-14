@@ -28,8 +28,6 @@ def health_check():
 @app.route('/api/clean', methods=['POST'])
 def clean_text():
     """
-    TODO: Implement this endpoint for Part 3
-    
     API endpoint that accepts a URL and returns cleaned text
     
     Expected JSON input:
@@ -45,21 +43,35 @@ def clean_text():
         }
     """
     try:
-        # TODO: Get JSON data from request
-        # TODO: Extract URL from the JSON
-        # TODO: Validate URL (should be .txt)
-        # TODO: Use preprocessor.fetch_from_url() 
-        # TODO: Clean the text with preprocessor.clean_gutenberg_text()
-        # TODO: Normalize with preprocessor.normalize_text()
-        # TODO: Get statistics with preprocessor.get_text_statistics()
-        # TODO: Create summary with preprocessor.create_summary()
-        # TODO: Return JSON response
-        
+        # get the json data from the request
+        data = request.get_json()
+        url = data.get('url', '')
+
+        # make sure url is a .txt file
+        if not url.endswith('.txt'):
+            return jsonify({
+                "success": False,
+                "error": "URL must point to a .txt file"
+            }), 400
+
+        # fetch the raw text from the url
+        raw_text = preprocessor.fetch_from_url(url)
+
+        # clean up the gutenberg headers/footers and normalize it
+        cleaned = preprocessor.clean_gutenberg_text(raw_text)
+        normalized = preprocessor.normalize_text(cleaned)
+
+        # get stats and summary
+        stats = preprocessor.get_text_statistics(normalized)
+        summary = preprocessor.create_summary(normalized)
+
         return jsonify({
-            "success": False,
-            "error": "Not implemented yet - complete this for Part 3!"
-        }), 501
-        
+            "success": True,
+            "cleaned_text": normalized,
+            "statistics": stats,
+            "summary": summary
+        })
+
     except Exception as e:
         return jsonify({
             "success": False,
@@ -69,13 +81,11 @@ def clean_text():
 @app.route('/api/analyze', methods=['POST'])
 def analyze_text():
     """
-    TODO: Implement this endpoint for Part 3
-    
     API endpoint that accepts raw text and returns statistics only
-    
+
     Expected JSON input:
         {"text": "Your raw text here..."}
-    
+
     Returns JSON:
         {
             "success": true/false,
@@ -84,16 +94,23 @@ def analyze_text():
         }
     """
     try:
-        # TODO: Get JSON data from request
-        # TODO: Extract text from the JSON
-        # TODO: Get statistics with preprocessor.get_text_statistics()
-        # TODO: Return JSON response
-        
+        data = request.get_json()
+        text = data.get('text', '')
+
+        if not text:
+            return jsonify({
+                "success": False,
+                "error": "No text provided"
+            }), 400
+
+        # just run the stats on the raw text they gave us
+        stats = preprocessor.get_text_statistics(text)
+
         return jsonify({
-            "success": False,
-            "error": "Not implemented yet - complete this for Part 3!"
-        }), 501
-        
+            "success": True,
+            "statistics": stats
+        })
+
     except Exception as e:
         return jsonify({
             "success": False,

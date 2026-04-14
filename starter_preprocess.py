@@ -63,9 +63,9 @@ class TextPreprocessor:
         text = text.lower()
         
         # Standardize quotes and dashes
-        text = re.sub(r'[""]', '"', text)
-        text = re.sub(r'['']', "'", text)
-        text = re.sub(r'—|–', '-', text)
+        text = re.sub(r'[\u201c\u201d]', '"', text)
+        text = re.sub(r'[\u2018\u2019]', "'", text)
+        text = re.sub(r'\u2014|\u2013', '-', text)
         
         if preserve_sentences:
             # Keep sentence endings but remove other punctuation
@@ -114,53 +114,98 @@ class TextPreprocessor:
         """Get word count for each sentence"""
         return [len(self.tokenize_words(sent)) for sent in sentences]
     
-    # TODO: Implement these methods for the warm-up assignment
-    
+    # ---- Methods I implemented for the warm-up assignment ----
+
     def fetch_from_url(self, url: str) -> str:
         """
-        TODO: Fetch text content from a URL (especially Project Gutenberg)
-        
+        Fetch text content from a URL (especially Project Gutenberg)
+
         Args:
             url: URL to a .txt file
-            
+
         Returns:
             Raw text content
-            
+
         Raises:
             Exception if URL is invalid or cannot be reached
         """
-        # Hint: Use requests.get() and validate that it's a .txt URL
-        # Don't forget error handling!
-        raise NotImplementedError("Implement this for Part 2 of the assignment")
-    
+        # make sure its actually a text file
+        if not url.endswith('.txt'):
+            raise ValueError("URL must point to a .txt file")
+
+        # use requests to grab the text, with a timeout so it doesnt hang forever
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()  # this will throw an error if the request failed
+
+        return response.text
+
     def get_text_statistics(self, text: str) -> Dict:
         """
-        TODO: Calculate basic statistics about the text
-        
+        Calculate basic statistics about the text
+
         Returns dictionary with:
             - total_characters
-            - total_words  
+            - total_words
             - total_sentences
             - avg_word_length
             - avg_sentence_length
             - most_common_words (top 10)
         """
-        # Hint: Use the existing tokenize methods and Counter
-        raise NotImplementedError("Implement this for Part 2 of the assignment")
-    
+        # use the tokenize methods that are already in the class
+        words = self.tokenize_words(text)
+        sentences = self.tokenize_sentences(text)
+
+        total_chars = len(text)
+        total_words = len(words)
+        total_sentences = len(sentences)
+
+        # calculate averages, but watch out for division by zero
+        if total_words > 0:
+            avg_word_len = sum(len(w) for w in words) / total_words
+        else:
+            avg_word_len = 0
+
+        if total_sentences > 0:
+            avg_sent_len = total_words / total_sentences
+        else:
+            avg_sent_len = 0
+
+        # get the 10 most common words using Counter
+        word_counts = Counter(words)
+        top_10 = word_counts.most_common(10)
+
+        return {
+            "total_characters": total_chars,
+            "total_words": total_words,
+            "total_sentences": total_sentences,
+            "avg_word_length": round(avg_word_len, 2),
+            "avg_sentence_length": round(avg_sent_len, 2),
+            "most_common_words": top_10
+        }
+
     def create_summary(self, text: str, num_sentences: int = 3) -> str:
         """
-        TODO: Create a simple extractive summary by returning the first N sentences
-        
+        Create a simple extractive summary by returning the first N sentences
+
         Args:
             text: Cleaned text
             num_sentences: Number of sentences to include
-            
+
         Returns:
             Summary string
         """
-        # Hint: Use tokenize_sentences() and join the first N sentences
-        raise NotImplementedError("Implement this for Part 2 of the assignment")
+        sentences = self.tokenize_sentences(text)
+
+        # just grab the first few sentences
+        first_n = sentences[:num_sentences]
+
+        # join them back together with periods
+        if len(first_n) > 0:
+            summary = '. '.join(first_n) + '.'
+        else:
+            summary = ''
+
+        return summary
 
 
 class FrequencyAnalyzer:

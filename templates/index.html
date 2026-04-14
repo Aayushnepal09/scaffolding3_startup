@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gutenberg Text Cleaner</title>
+    
     <style>
         /* Modern, clean styling */
         * {
@@ -16,31 +17,31 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f0f2f5;
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px 20px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 820px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: #4a6cf7;
             color: white;
-            padding: 2rem;
+            padding: 1.8rem 2rem;
             text-align: center;
         }
-        
+
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 300;
+            font-size: 2rem;
+            margin-bottom: 0.4rem;
+            font-weight: 400;
         }
         
         .header p {
@@ -74,25 +75,24 @@
         
         input[type="url"]:focus {
             outline: none;
-            border-color: #4facfe;
+            border-color: #050607;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
         
         .button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a6cf7;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 11px 28px;
+            border-radius: 6px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background 0.2s ease;
         }
-        
+
         .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            background: #3b5de7;
         }
         
         .button:disabled {
@@ -153,14 +153,14 @@
             background: white;
             padding: 1rem;
             border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e8e8e8;
             text-align: center;
         }
-        
+
         .stat-value {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #667eea;
+            color: #4a6cf7;
             display: block;
         }
         
@@ -174,7 +174,7 @@
             background: white;
             padding: 1rem;
             border-radius: 6px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4a6cf7;
             margin-bottom: 1rem;
         }
         
@@ -371,16 +371,23 @@
             showLoading();
             
             try {
-                // TODO: Make API call to /api/clean endpoint
-                // Hint: Use fetch() with POST method
-                // Send JSON: {"url": url}
-                // Handle the response
-                
-                // For now, show an error since the API isn't implemented yet
-                setTimeout(() => {
-                    showError('API not implemented yet. Complete Part 3 to make this work!');
-                }, 1000);
-                
+                // send the url to our backend api
+                const response = await fetch('/api/clean', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.json();
+
+                // check if it worked and show results or error
+                if (data.success) {
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'Something went wrong');
+                }
             } catch (error) {
                 showError('Network error: ' + error.message);
             }
