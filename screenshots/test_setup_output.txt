@@ -1,0 +1,47 @@
+C:\Users\nepal\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\__init__.py:113: RequestsDependencyWarning: urllib3 (2.2.3) or chardet (7.4.3)/charset_normalizer (3.4.0) doesn't match a supported version!
+  warnings.warn(
+🔍 CSE 510 Warm-Up Assignment - Environment Setup Test
+============================================================
+
+--- Python Version ---
+🐍 Python version: 3.12.7
+✅ Python version is compatible
+
+--- Required Packages ---
+
+📦 Checking required packages...
+✅ flask
+✅ requests
+✅ bs4
+✅ nltk
+✅ dotenv
+
+--- Basic Functionality ---
+
+🧪 Testing basic functionality...
+✅ requests library working
+✅ Flask can create app instance
+✅ Text processing working: 6 words found
+
+--- Project Gutenberg Access ---
+
+📚 Testing Project Gutenberg access...
+✅ Project Gutenberg accessible
+
+============================================================
+📋 SETUP TEST SUMMARY
+============================================================
+✅ PASS   Python Version
+✅ PASS   Required Packages
+✅ PASS   Basic Functionality
+✅ PASS   Project Gutenberg Access
+
+============================================================
+🎉 ENVIRONMENT SETUP COMPLETE!
+You're ready to start the warm-up assignment!
+
+Next steps:
+1. Read the assignment PDF carefully
+2. Start with Part 2: Extending the TextPreprocessor
+3. Test each part incrementally
+============================================================
